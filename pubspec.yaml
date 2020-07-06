@@ -35,6 +35,8 @@ dependencies:
   pedometer: ^1.2.0
   light: ^0.1.1
   activity_recognition_flutter: ^1.2.0
+  flutter_ble_lib: ^2.2.5
+
 
 dev_dependencies:
   flutter_test:

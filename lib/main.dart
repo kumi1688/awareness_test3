@@ -9,6 +9,7 @@ import 'page/accelator.dart';
 import 'page/step.dart';
 import 'page/light.dart';
 import 'page/activity_recognition.dart';
+import 'page/bluetooth.dart';
 
 void main() => runApp(
   ChangeNotifierProvider(
@@ -29,6 +30,7 @@ class _LocationDemoV1State extends State<LocationDemoV1> {
   static const String STEP_PAGE = '/step';
   static const String LIGHT_PAGE = '/light';
   static const String ACTIVITY_RECOGNITION_PAGE = '/activity_recognition';
+  static const String BLUETOOTH = '/bluetooth';
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,8 @@ class _LocationDemoV1State extends State<LocationDemoV1> {
         ACCELATOR_PAGE: (context) => AccelatorPage(),
         STEP_PAGE: (context) => StepPage(),
         LIGHT_PAGE: (context) => LightPage(),
-        ACTIVITY_RECOGNITION_PAGE: (context) => ActivityRecognitionPage()
+        ACTIVITY_RECOGNITION_PAGE: (context) => ActivityRecognitionPage(),
+        BLUETOOTH: (context) => BluetoothPage()
       }
     );
   }

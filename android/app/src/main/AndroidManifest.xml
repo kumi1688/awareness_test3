@@ -8,6 +8,9 @@
     <uses-permission android:name="ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
 
     <application
         android:name="io.flutter.app.FlutterApplication"
@@ -49,5 +52,15 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <meta-data
+            android:name="com.google.android.awareness.API_KEY"
+            android:value="AIzaSyBD0A7bTA5mEl5G1odnxfz-TzJFsaD7wr4"/>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBD0A7bTA5mEl5G1odnxfz-TzJFsaD7wr4"/>
+
+
     </application>
 </manifest>

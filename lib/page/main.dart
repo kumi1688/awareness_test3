@@ -12,6 +12,7 @@ class _MainPageState extends State<MainPage> {
   static const String STEP_PAGE = '/step';
   static const String LIGHT_PAGE = '/light';
   static const String ACTIVITY_RECOGNITION_PAGE = '/activity_recognition';
+  static const String BLUETOOTH = '/bluetooth';
 
   _showNextPage(BuildContext context, String destination) => Navigator.pushNamed(context, destination);
 
@@ -44,6 +45,10 @@ class _MainPageState extends State<MainPage> {
                 RaisedButton(
                   onPressed: () => _showNextPage(context, ACTIVITY_RECOGNITION_PAGE),
                   child: Text('상태 추적 화면으로 넘어가기'),
+                ),
+                RaisedButton(
+                  onPressed: () => _showNextPage(context, BLUETOOTH),
+                  child: Text('블루투스 화면으로 넘어가기'),
                 ),
               ],
 
