@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:light/light.dart';
+import 'package:http/http.dart' as http;
 
 class LightPage extends StatefulWidget {
   @override
@@ -20,10 +21,22 @@ class _LightPageState extends State<LightPage> {
     super.initState();
 //    _checkPermission();
     startListening();
+    Timer.periodic(Duration(minutes: 60), (timer) {
+      _sendLightData();
+    });
   }
 
   _checkPermission() async {
     await Permission.activityRecognition.request();
+  }
+
+  _sendLightData() async {
+    String url = 'http://210.107.206.172:3000/light';
+    var data = {
+      "light": _lightValue.toString(),
+      "time": new DateTime.now().toString()
+    };
+    await http.post(url, body: data);
   }
 
   void onData(int luxValue) async {

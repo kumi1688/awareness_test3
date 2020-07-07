@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
 
 
 class LocationPage extends StatefulWidget {
@@ -20,7 +21,7 @@ class _LocationPageState extends State<LocationPage> {
     // TODO: implement initState
     super.initState();
     _checkPermission();
-    _getCurrentPosition();
+//    _getCurrentPosition();
     _addLocationStream();
   }
 
@@ -38,11 +39,24 @@ class _LocationPageState extends State<LocationPage> {
     StreamSubscription<Position> positionStream = geolocator.getPositionStream(locationOptions)
         .listen((Position position) {
       print(position == null ? 'Unknown' : position.latitude.toString() + ', ' + position.longitude.toString());
+
       setState(() {
         _position = position;
       });
+      _sendLocationData();
     });
     _streamSubscriptions.add(positionStream);
+  }
+
+  _sendLocationData() async {
+    String url = 'http://210.107.206.172:3000/location';
+    var data = {
+      "latitude": _position.latitude.toString(),
+      "longitude": _position.longitude.toString(),
+      "time": new DateTime.now().toString()
+    };
+    print(data);
+    await http.post(url, body: data);
   }
 
   _checkPermission() async {
@@ -56,6 +70,21 @@ class _LocationPageState extends State<LocationPage> {
 
   @override
   Widget build(BuildContext context) {
+    _addLocationStream() {
+      var geolocator = new Geolocator();
+      var locationOptions = LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
+
+      StreamSubscription<Position> positionStream = geolocator.getPositionStream(locationOptions)
+          .listen((Position position) {
+        print(position == null ? 'Unknown' : position.latitude.toString() + ', ' + position.longitude.toString());
+        _sendLocationData();
+        setState(() {
+          _position = position;
+        });
+      });
+      _streamSubscriptions.add(positionStream);
+    }
+
     return Scaffold(
         appBar: AppBar(
             title: Text('위치 화면')

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:activity_recognition_flutter/activity_recognition_flutter.dart';
+import 'package:http/http.dart' as http;
 
 import 'dart:io' show Platform;
 
@@ -27,12 +28,22 @@ class _ActivityRecognitionPageState extends State<ActivityRecognitionPage> {
 //    setState(()=>_userDetectiveActivity = uda == null ? '상태 가져올 수 없음' : uda);
     final List<dynamic> udas = await _methodChannel.invokeMethod('getUserDetectiveActivity');
     setState(()=>_userDetectiveActivities = udas);
+//    _sendActivityData();
+  }
+
+  _sendActivityData() async {
+    String url = 'http://210.107.206.172:3000/acitivity';
+    var data = {
+      "activity": _userDetectiveActivities.toString(),
+      "time": new DateTime.now().toString()
+    };
+    await http.post(url, body: data);
   }
 
   _checkUserDetectiveActivity() {
-    Timer.periodic(new Duration(seconds: 3), (timer) {
+    Timer.periodic(new Duration(seconds: 5), (timer) {
       getUserDetectiveActivity();
-      setState(()=>_updateCount += 1);
+
       });
   }
 
@@ -41,6 +52,7 @@ class _ActivityRecognitionPageState extends State<ActivityRecognitionPage> {
     // TODO: implement initState
     super.initState();
     _checkUserDetectiveActivity();
+
   }
 
   @override

@@ -3,13 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sensors/sensors.dart';
+import 'package:http/http.dart' as http;
 
-class AccelatorPage extends StatefulWidget {
+class AccelerometerPage extends StatefulWidget {
   @override
   _Accelerometer createState() => _Accelerometer();
 }
 
-class _Accelerometer extends State<AccelatorPage> {
+class _Accelerometer extends State<AccelerometerPage> {
   List<double> _accelerometerValues;
   List<double> _userAccelerometerValues;
   List<double> _gyroscopeValues;
@@ -23,6 +24,9 @@ class _Accelerometer extends State<AccelatorPage> {
     super.initState();
     _checkPermission();
     _requestPermission();
+    Timer.periodic(Duration(minutes: 60), (timer) {
+//      _sendAccData();
+    });
   }
 
   _checkPermission() async {
@@ -77,4 +81,23 @@ class _Accelerometer extends State<AccelatorPage> {
   }
 
   _backToMainPage(BuildContext context) => Navigator.pop(context);
+
+  _sendAccData() async {
+    final List<String> accelerometer =
+    _accelerometerValues?.map((double v) => v.toStringAsFixed(1))?.toList();
+    final List<String> gyroscope =
+    _gyroscopeValues?.map((double v) => v.toStringAsFixed(1))?.toList();
+    final List<String> userAccelerometer = _userAccelerometerValues
+        ?.map((double v) => v.toStringAsFixed(1))
+        ?.toList();
+
+    String url = 'http://210.107.206.172:3000/accelerometer';
+    var data = {
+      "accelerometer": accelerometer.toString(),
+      "gyroscope": gyroscope.toString(),
+      "userAccelerometer": userAccelerometer.toString(),
+      "time": new DateTime.now().toString()
+    };
+    await http.post(url, body: data);
+  }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,7 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:http/http.dart' as http;
 
-import '../state/Location.dart';
+import '../state/step.dart';
 
 class StepPage extends StatefulWidget {
   @override
@@ -25,34 +26,40 @@ class _StepPageState extends State<StepPage> {
     // TODO: implement initState
     super.initState();
     _checkPermission();
-    startListening();
+    _startListening();
+    Timer.periodic(Duration(minutes: 60), (timer) {
+      _sendStepData();
+    });
+  }
+
+  void _onData(int stepCountValue) async {
+    if(_initialStepCountValue == -1){
+      setState(() => _initialStepCountValue = stepCountValue);
+    }
+//    final _stepState = Provider.of<stepState>(context);
+//    _stepState.step = stepCountValue - _initialStepCountValue;
+    setState(() => _stepCountValue = stepCountValue - _initialStepCountValue);
+  }
+
+  void _startListening() {
+    _pedometer = new Pedometer();
+    _subscription = _pedometer.pedometerStream.listen(_onData,
+        onError: _onError, onDone: _onDone, cancelOnError: true);
+  }
+
+  _sendStepData() async {
+      String url = 'http://210.107.206.172:3000/step';
+      var data = {
+        "step": _stepCountValue.toString(),
+        "time": new DateTime.now().toString()
+      };
+      await http.post(url, body: data);
+      setState(()=>_stepCountValue = 0);
   }
 
   _checkPermission() async {
     await Permission.activityRecognition.request();
   }
-
-  _sendStepData() async {
-      String url = 'http://15.164.219.251:3000/step';
-      var response = await http.post(url, body: {"step": _stepCountValue.toString()});
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-//    Timer.periodic(new Duration(seconds: 5), (timer) async {
-//      String url = 'http://15.164.219.251:3000/step';
-//      var response = await http.post(url, body: {"step": _stepCountValue.toString()});
-//      print('Response status: ${response.statusCode}');
-//      print('Response body: ${response.body}');
-//    });
-  }
-
-  _getTestData() async {
-    String url = 'http://15.164.219.251:3000/step';
-    var response = await http.get(url);
-    print('status = ${response.statusCode}');
-    print('body = ${response.body}');
-  }
-
-
 
   void _onDone() => print("Finished pedometer tracking");
 
@@ -65,20 +72,6 @@ class _StepPageState extends State<StepPage> {
   @override
   Widget build(BuildContext context) {
 
-    void _onData(int stepCountValue) async {
-      if(_initialStepCountValue == -1){
-        setState(() => _initialStepCountValue = stepCountValue);
-      }
-      final Location location = Provider.of<Location>(context);
-      location.step = stepCountValue;
-      setState(() => _stepCountValue = stepCountValue - _initialStepCountValue);
-    }
-
-    void startListening() {
-      _pedometer = new Pedometer();
-      _subscription = _pedometer.pedometerStream.listen(_onData,
-          onError: _onError, onDone: _onDone, cancelOnError: true);
-    }
 
     return Scaffold(
         appBar: AppBar(
