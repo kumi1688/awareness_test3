@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_location_test/page/network.dart';
 import 'package:provider/provider.dart';
 
-import 'Location.dart';
+import 'state/Location.dart';
 
 import 'page/location.dart';
 import 'page/main.dart';
@@ -10,6 +11,7 @@ import 'page/step.dart';
 import 'page/light.dart';
 import 'page/activity_recognition.dart';
 import 'page/bluetooth.dart';
+import 'page/network.dart';
 
 void main() => runApp(
   ChangeNotifierProvider(
@@ -31,6 +33,8 @@ class _LocationDemoV1State extends State<LocationDemoV1> {
   static const String LIGHT_PAGE = '/light';
   static const String ACTIVITY_RECOGNITION_PAGE = '/activity_recognition';
   static const String BLUETOOTH = '/bluetooth';
+  static const String NETWORK = '/network';
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +48,8 @@ class _LocationDemoV1State extends State<LocationDemoV1> {
         STEP_PAGE: (context) => StepPage(),
         LIGHT_PAGE: (context) => LightPage(),
         ACTIVITY_RECOGNITION_PAGE: (context) => ActivityRecognitionPage(),
-        BLUETOOTH: (context) => BluetoothPage()
+        BLUETOOTH: (context) => BluetoothPage(),
+        NETWORK: (context) => NetworkPage()
       }
     );
   }
