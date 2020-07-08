@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:core';
 
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class _ActivityRecognitionPageState extends State<ActivityRecognitionPage> {
   List<dynamic>_userDetectiveActivities = [];
   String _userDetectiveActivity = '';
   int _updateCount = 0;
+  Timer _everySecond;
   static const MethodChannel _methodChannel =  const MethodChannel('com.example.flutter_location_test');
   static const EventChannel _eventChannel = const EventChannel('com.example.flutter_location_test');
 
@@ -31,19 +33,21 @@ class _ActivityRecognitionPageState extends State<ActivityRecognitionPage> {
 //    _sendActivityData();
   }
 
+
+
   _sendActivityData() async {
-    String url = 'http://210.107.206.172:3000/acitivity';
+    String url = 'http://210.107.206.172:3000/activity';
     var data = {
-      "activity": _userDetectiveActivities.toString(),
+      "activity": jsonEncode(_userDetectiveActivities),
       "time": new DateTime.now().toString()
     };
-    await http.post(url, body: data);
+    print(jsonEncode(data));
+    http.post(url, body: data);
   }
 
   _checkUserDetectiveActivity() {
-    Timer.periodic(new Duration(seconds: 5), (timer) {
-      getUserDetectiveActivity();
-
+    _everySecond = Timer.periodic(Duration(seconds: 10), (timer) {
+//      getUserDetectiveActivity();
       });
   }
 
@@ -66,7 +70,7 @@ class _ActivityRecognitionPageState extends State<ActivityRecognitionPage> {
         ) ,
 
       floatingActionButton: FloatingActionButton(
-        onPressed: getUserDetectiveActivity, //버튼이 눌리면 스캔 ON/OFF 동작
+        onPressed: getUserDetectiveActivity,
         child: Icon(Icons.search)
       ),
     );
@@ -78,7 +82,6 @@ class _ActivityRecognitionPageState extends State<ActivityRecognitionPage> {
         itemBuilder: (BuildContext context, int i){
           return ListTile(
             title: Text('${_userDetectiveActivities[i]}'),
-
           );
         }
     );

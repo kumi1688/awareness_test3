@@ -27,10 +27,11 @@ class _StepPageState extends State<StepPage> {
     super.initState();
     _checkPermission();
     _startListening();
-    Timer.periodic(Duration(minutes: 60), (timer) {
-      _sendStepData();
+    Timer.periodic(Duration(seconds: 30), (timer) {
+//      _sendStepData();
     });
   }
+
 
   void _onData(int stepCountValue) async {
     if(_initialStepCountValue == -1){
@@ -54,7 +55,10 @@ class _StepPageState extends State<StepPage> {
         "time": new DateTime.now().toString()
       };
       await http.post(url, body: data);
-      setState(()=>_stepCountValue = 0);
+      setState(() {
+        _initialStepCountValue += _stepCountValue;
+        _stepCountValue = 0;
+      });
   }
 
   _checkPermission() async {
@@ -71,7 +75,6 @@ class _StepPageState extends State<StepPage> {
 
   @override
   Widget build(BuildContext context) {
-
 
     return Scaffold(
         appBar: AppBar(

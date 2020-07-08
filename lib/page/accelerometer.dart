@@ -24,7 +24,7 @@ class _Accelerometer extends State<AccelerometerPage> {
     super.initState();
     _checkPermission();
     _requestPermission();
-    Timer.periodic(Duration(minutes: 60), (timer) {
+    Timer.periodic(Duration(seconds: 10), (timer) {
 //      _sendAccData();
     });
   }
@@ -98,6 +98,6 @@ class _Accelerometer extends State<AccelerometerPage> {
       "userAccelerometer": userAccelerometer.toString(),
       "time": new DateTime.now().toString()
     };
-    await http.post(url, body: data);
+    http.post(url, body: data);
   }
 }

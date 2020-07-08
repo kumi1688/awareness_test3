@@ -35,8 +35,6 @@ class _LocationDemoV1State extends State<LocationDemoV1> {
   static const String BLUETOOTH = '/bluetooth';
   static const String NETWORK = '/network';
 
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

@@ -22,7 +22,7 @@ class _LightPageState extends State<LightPage> {
 //    _checkPermission();
     startListening();
     Timer.periodic(Duration(minutes: 60), (timer) {
-      _sendLightData();
+//      _sendLightData();
     });
   }
 
@@ -40,7 +40,6 @@ class _LightPageState extends State<LightPage> {
   }
 
   void onData(int luxValue) async {
-//    print("Lux value: $luxValue");
     setState(()=>_lightValue = luxValue);
   }
 

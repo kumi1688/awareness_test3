@@ -5,7 +5,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 
-
 class LocationPage extends StatefulWidget {
   @override
   _LocationPageState createState() => _LocationPageState();
@@ -21,7 +20,7 @@ class _LocationPageState extends State<LocationPage> {
     // TODO: implement initState
     super.initState();
     _checkPermission();
-//    _getCurrentPosition();
+    _getCurrentPosition();
     _addLocationStream();
   }
 
@@ -55,8 +54,7 @@ class _LocationPageState extends State<LocationPage> {
       "longitude": _position.longitude.toString(),
       "time": new DateTime.now().toString()
     };
-    print(data);
-    await http.post(url, body: data);
+    http.post(url, body: data);
   }
 
   _checkPermission() async {
@@ -77,7 +75,7 @@ class _LocationPageState extends State<LocationPage> {
       StreamSubscription<Position> positionStream = geolocator.getPositionStream(locationOptions)
           .listen((Position position) {
         print(position == null ? 'Unknown' : position.latitude.toString() + ', ' + position.longitude.toString());
-        _sendLocationData();
+//        _sendLocationData();
         setState(() {
           _position = position;
         });
